@@ -14,7 +14,7 @@ export const homeController = async () => {
       : await getReservations(user.id);
 
     container.innerHTML = reservations.length
-      ? reservations.map((r) => ReservationCard(r, isManaging)).join("")
+      ? reservations.map((r) => ReservationCard(r, isManaging, user.role)).join("")
       : `
         <div class="w-full text-center py-8 col-span-2">
           <p class="text-slate-500">No hay reservas disponibles</p>
@@ -103,6 +103,26 @@ export const homeController = async () => {
       if (startHour >= endHour) {
         alert("La hora de fin debe ser posterior a la hora de inicio.");
         return;
+      }
+
+      // Validar traslape/superposición de horarios
+      try {
+        const allReservations = await getReservations();
+        const hasOverlap = allReservations.some((r) => {
+          // No confrontar con reservas rechazadas o canceladas
+          if (r.status === "cancelled" || r.status === "rejected") return false;
+          // Debe ser el mismo espacio en la misma fecha
+          if (r.workspace !== workspace || r.date !== date) return false;
+          // Validar traslape: startA < endB && startB < endA
+          return startHour < r.endHour && r.startHour < endHour;
+        });
+
+        if (hasOverlap) {
+          alert("El espacio ya se encuentra reservado en el horario seleccionado.");
+          return;
+        }
+      } catch (error) {
+        console.error("Error al validar traslape de horario:", error);
       }
 
       let newId = 1;
@@ -213,6 +233,28 @@ export const homeController = async () => {
         return;
       }
 
+      // Validar traslape/superposición de horarios
+      try {
+        const allReservations = await getReservations();
+        const hasOverlap = allReservations.some((r) => {
+          // No confrontar con la misma reserva que se está editando
+          if (String(r.id) === String(id)) return false;
+          // No confrontar con reservas rechazadas o canceladas
+          if (r.status === "cancelled" || r.status === "rejected") return false;
+          // Debe ser el mismo espacio en la misma fecha
+          if (r.workspace !== workspace || r.date !== date) return false;
+          // Validar traslape: startA < endB && startB < endA
+          return startHour < r.endHour && r.startHour < endHour;
+        });
+
+        if (hasOverlap) {
+          alert("El espacio ya se encuentra reservado en el horario seleccionado.");
+          return;
+        }
+      } catch (error) {
+        console.error("Error al validar traslape de horario:", error);
+      }
+
       // Buscar la reserva original para preservar el tipo de ID y userId exactos
       let finalId = id;
       let finalUserId = user.id;
@@ -285,6 +327,11 @@ export const homeController = async () => {
           const reservation = allReservations.find((r) => String(r.id) === String(id));
           if (!reservation) {
             alert("No se encontró la reserva.");
+            return;
+          }
+
+          if (reservation.status !== "approved") {
+            alert("Solo se pueden cancelar reservas que estén aprobadas.");
             return;
           }
 

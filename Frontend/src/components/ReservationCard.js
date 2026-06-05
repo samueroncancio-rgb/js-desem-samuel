@@ -1,4 +1,4 @@
-export default function ReservationCard(reservation, isAdminManaging = false) {
+export default function ReservationCard(reservation, isAdminManaging = false, userRole = 'user') {
   const { id, workspace, date, startHour, endHour, reason, status } = reservation;
 
   const statusConfig = {
@@ -19,14 +19,7 @@ export default function ReservationCard(reservation, isAdminManaging = false) {
           ${workspace}
         </h3>
         <div class="flex gap-1.5 flex-wrap justify-end">
-          ${status === 'pending' ? `
-          <button
-            data-id="${id}"
-            class="btn-cancel text-amber-600 hover:text-amber-800 hover:bg-amber-50 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
-          >
-            Cancelar
-          </button>
-          ` : ''}
+          ${userRole === 'admin' ? `
           <button
             data-id="${id}"
             class="btn-edit text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
@@ -39,6 +32,33 @@ export default function ReservationCard(reservation, isAdminManaging = false) {
           >
             Eliminar
           </button>
+          ` : status === 'pending' ? `
+          <button
+            data-id="${id}"
+            class="btn-cancel text-amber-600 hover:text-amber-800 hover:bg-amber-50 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
+          >
+            Cancelar
+          </button>
+          <button
+            data-id="${id}"
+            class="btn-edit text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
+          >
+            Editar
+          </button>
+          <button
+            data-id="${id}"
+            class="btn-delete text-red-600 hover:text-red-800 hover:bg-red-50 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
+          >
+            Eliminar
+          </button>
+          ` : status === 'approved' ? `
+          <button
+            data-id="${id}"
+            class="btn-cancel text-amber-600 hover:text-amber-800 hover:bg-amber-50 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer"
+          >
+            Cancelar
+          </button>
+          ` : ''}
         </div>
       </div>
 

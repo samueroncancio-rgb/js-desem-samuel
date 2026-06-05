@@ -38,33 +38,13 @@
   ],
   "reservations": [
     {
-      "id": "1",
-      "userId": 2,
-      "workspace": "Sala A",
-      "date": "2026-01-15",
-      "startHour": "08:00",
-      "endHour": "09:00",
-      "reason": "Sprint Planning",
-      "status": "approved"
-    },
-    {
-      "id": "2",
-      "userId": 3,
-      "workspace": "Sala B",
-      "date": "2026-01-15",
-      "startHour": "10:00",
-      "endHour": "11:00",
-      "reason": "Daily Meeting",
-      "status": "rejected"
-    },
-    {
-      "id": "MhmDNNW2bKU",
+      "id": "-5Ak_GaKGyU",
       "userId": "QS03rkGstjI",
-      "workspace": "Escritorio 2",
-      "date": "2026-06-18",
-      "startHour": "12:25",
-      "endHour": "14:25",
-      "reason": "hola",
+      "workspace": "Sala A",
+      "date": "2026-06-05",
+      "startHour": "14:00",
+      "endHour": "15:00",
+      "reason": "holaaa",
       "status": "cancelled"
     }
   ],
